@@ -4,36 +4,45 @@
       <span class="finish"> {{ value }} </span> / {{ maxValue }}
     </div>
     <div class="progress-bar2">
-      <div class="progress-bar" style="width: maxValue"></div>
+      <div class="progress-bar" :style="style(maxValue)"></div>
     </div>
   </div>
 </template>
 
 <script>
 export default {
+  functional: true,
   props: {
     value: {},
     maxValue: {},
+  },
+
+  data() {
+    return {};
+  },
+
+  methods: {
+    style(maxValue) {
+      return { width: `${maxValue}%` };
+    },
   },
 };
 </script>
 
 <style scoped>
 .progress {
-  max-width: 125px;
   width: 125px;
-  border: 2px solid black;
-  color: black;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
 }
 
 .progress-bar {
   background-color: #165a9f;
   border-radius: 11px;
-  width: 110px;
+  width: 112px;
   height: 8px;
+  max-width: 110px;
 }
 
 .progress-bar2 {
@@ -45,7 +54,5 @@ export default {
 
 .finish {
   font-weight: 700;
-  align-items: center;
-  justify-content: center;
 }
 </style>

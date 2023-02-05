@@ -5,15 +5,14 @@
 <script>
 import { TabulatorFull as Tabulator } from "tabulator-tables"; //import Tabulator library
 // import TesteComponent from "./TesteComponent.vue";
+// import { createApp, h } from "vue";
 
 export default {
   props: {
     tableData: {
       type: Array,
     },
-    maxValue: {
-      default: 100,
-    },
+    maxValue: {},
   },
 
   data() {
@@ -26,9 +25,11 @@ export default {
   mounted() {
     //instantiate Tabulator when element is mounted
     const vm = this;
+
     this.tabulator = new Tabulator(this.$refs.table, {
       data: this.tableData, //link data to table
       maxHeight: "100%",
+      // reactiveData: true,
       layout: "fitColumns",
       layoutColumnsOnNewData: true,
       rowFormatter: function (row) {
@@ -92,6 +93,7 @@ Não perturbe</span>
         {
           formatter: function (cell) {
             const value = cell.getValue();
+            console.log({ value });
 
             return `
             <div class="attendances">
@@ -138,21 +140,31 @@ Não perturbe</span>
           hozAlign: "right",
           headerHozAlign: "center",
           headerSort: false,
+          width: 145,
           resizable: false,
         },
         {
           title: "Finalizados",
           field: "finish",
+          headerHozAlign: "center",
           headerSort: false,
           resizable: false,
 
           formatter: function (cell) {
+            const finished = cell.getValue();
+            if (!finished || !vm.maxValue) return "";
+
+            const perc = (Number(finished) * 100) / vm.maxValue;
+            const maxPerc = perc > 100 ? 100 : perc.toFixed(2);
+
             return `
             <div class="progress">
               <div class="info">
-               <span class="finish"> ${cell.getValue()} </span>  / 20%
+               <span class="finish"> ${finished} </span>  / ${maxPerc}%
               </div>
-              <progress class="progress-bar" value="20" max="${vm.maxValue}"/>
+              <div class="progress-bar2">
+                <div class="progress-bar" style="width: ${maxPerc}%"></div>
+              </div>
             </div>
             `;
           },
@@ -164,16 +176,27 @@ Não perturbe</span>
           resizable: false,
         },
         {
-          formatter: function (cell, formatterParams, onRendered) {
-            //plain text value
-            return `
-            <a class="waves-effect waves-light btn">button</a>
-            `;
-          },
+          // formatter: function (cell, formatterParams, onRendered) {
+          //   //plain text value
+          //   return `
+          //   <a class="waves-effect waves-light btn">button</a>
+          //   `;
+          // },
           title: "Rejeiçoes",
           field: "rejections",
           headerSort: false,
           resizable: false,
+
+          // formatter: function (cell, formatterParams, onRendered) {
+          //   var holderEl = document.createElement("div");
+          //   holderEl.id = "test";
+
+          //   onRendered(function () {
+          //     const app = createApp(TesteComponent, { value: cell.getValue() });
+          //     app.mount("#test");
+          //   });
+          //   return holderEl;
+          // },
         },
         {
           title: "Número",
@@ -211,11 +234,17 @@ Não perturbe</span>
     onViewByAgent(args) {
       this.viewByAgent = args;
     },
+
+    watch: {
+      maxValue(maxValue) {
+        console.log({ maxValueNew: maxValue });
+      },
+    },
   },
 };
 </script>
 
-<style>
+<!-- <style>
 .tabulator {
   font-family: "Open Sans";
   font-size: 12px !important;
@@ -282,19 +311,12 @@ Não perturbe</span>
   border-radius: 5px;
 }
 
-.progress {
-  display: flex;
-  flex-direction: column;
-}
-
-.finish {
-  font-weight: 700;
-}
-
 .finish2 {
+  position: relative;
   font-size: 14px;
   font-weight: 700;
-  margin-left: 13px;
+  margin-left: 11px;
+  padding: 3px;
 }
 
 .attendances {
@@ -319,7 +341,8 @@ Não perturbe</span>
   width: 1px;
   min-width: 1px;
   height: 33px;
+  position: absolute;
 
   background: #c5c5c5;
 }
-</style>
+</style> -->

@@ -32,5 +32,20 @@ TableData.args = {
       status: "Disponível",
       doNotDisturb: true,
     },
+    {
+      agents: "Bruno Oliveira",
+      attendances: {
+        calls: 25,
+        chats: 10,
+      },
+      finish: 35,
+      exten: "0014",
+      rejections: 0,
+      callerNumber: "6733180700",
+      idle: 600,
+      duration: 300,
+      status: "Pausado",
+      doNotDisturb: false,
+    },
   ],
 };
